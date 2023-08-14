@@ -24,4 +24,9 @@ public class TransactionProvider implements ITransactionProvider {
         transactionId = emptyTransactionId;
         return true;
     }
+
+    @Override
+    public boolean isTransactionIdValid(int clientTransactionId) {
+        return clientTransactionId != emptyTransactionId && clientTransactionId == transactionId;
+    }
 }
