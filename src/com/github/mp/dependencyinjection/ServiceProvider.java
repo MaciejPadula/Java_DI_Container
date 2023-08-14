@@ -26,16 +26,24 @@ public class ServiceProvider implements IServiceProvider {
         var descriptor = services.get(key);
         var transactionId = transactionProvider.tryBeginTransaction();
 
+        if (transactionProvider.isTransactionIdValid(transactionId)) {
+            clearScopedHandler();
+        }
+
         var instance = key.cast(createObject(key, descriptor));
 
         if (transactionProvider.tryFinalizeTransaction(transactionId)) {
-            handlers.stream()
-                    .filter(x -> x.canHandle(Lifetime.SCOPED))
-                    .findFirst()
-                    .ifPresent(ISingleInstanceHandler::clear);
+            clearScopedHandler();
         }
 
         return instance;
+    }
+
+    private void clearScopedHandler() {
+        handlers.stream()
+                .filter(x -> x.canHandle(Lifetime.SCOPED))
+                .findFirst()
+                .ifPresent(ISingleInstanceHandler::clear);
     }
 
     @Override
