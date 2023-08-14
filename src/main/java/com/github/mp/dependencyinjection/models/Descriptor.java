@@ -1,6 +1,6 @@
 package com.github.mp.dependencyinjection.models;
 
-import com.github.mp.dependencyinjection.IServiceProvider;
+import com.github.mp.dependencyinjection.services.IServiceProvider;
 import com.github.mp.dependencyinjection.models.enums.Lifetime;
 
 import java.lang.reflect.Type;

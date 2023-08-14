@@ -1,4 +1,4 @@
-package com.github.mp.dependencyinjection;
+package com.github.mp.dependencyinjection.services;
 
 import com.github.mp.dependencyinjection.models.Descriptor;
 

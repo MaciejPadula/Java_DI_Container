@@ -1,5 +1,6 @@
-package com.github.mp.dependencyinjection;
+package com.github.mp.dependencyinjection.services;
 
+import com.github.mp.dependencyinjection.factory.ServiceProviderFactory;
 import com.github.mp.dependencyinjection.models.Descriptor;
 import com.github.mp.dependencyinjection.models.enums.Lifetime;
 
@@ -9,11 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ServiceCollection implements IServiceCollection{
-    private final Map<Type, Descriptor> services;
-
-    public ServiceCollection() {
-        services = new HashMap<>();
-    }
+    private final Map<Type, Descriptor> services = new HashMap<>();
 
     @Override
     public IServiceCollection add(Descriptor descriptor) {

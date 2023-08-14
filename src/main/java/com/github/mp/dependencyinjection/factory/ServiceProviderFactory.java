@@ -1,5 +1,7 @@
-package com.github.mp.dependencyinjection;
+package com.github.mp.dependencyinjection.factory;
 
+import com.github.mp.dependencyinjection.services.IServiceProvider;
+import com.github.mp.dependencyinjection.services.ServiceProvider;
 import com.github.mp.dependencyinjection.handlers.ScopedHandler;
 import com.github.mp.dependencyinjection.handlers.SingletonHandler;
 import com.github.mp.dependencyinjection.models.Descriptor;

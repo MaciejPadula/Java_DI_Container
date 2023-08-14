@@ -1,7 +1,7 @@
 package examples.ex2;
 
-import com.github.mp.dependencyinjection.IServiceCollection;
-import com.github.mp.dependencyinjection.ServiceCollection;
+import com.github.mp.dependencyinjection.services.IServiceCollection;
+import com.github.mp.dependencyinjection.services.ServiceCollection;
 import com.github.mp.dependencyinjection.exceptions.ServiceNotFoundException;
 import examples.ex2.repositories.IUserRepository;
 import examples.ex2.repositories.ListUserRepository;
