@@ -4,6 +4,7 @@ import com.github.mp.dependencyinjection.exceptions.ServiceNotFoundException;
 import com.github.mp.dependencyinjection.handlers.ISingleInstanceHandler;
 import com.github.mp.dependencyinjection.models.Descriptor;
 import com.github.mp.dependencyinjection.models.enums.Lifetime;
+import com.github.mp.dependencyinjection.providers.ITransactionProvider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
@@ -11,28 +12,27 @@ import java.util.*;
 
 public class ServiceProvider implements IServiceProvider {
     private final List<ISingleInstanceHandler> handlers;
+    private final ITransactionProvider transactionProvider;
     private final Map<Type, Descriptor> services;
-    private boolean transactionBegin = false;
 
-    public ServiceProvider(List<ISingleInstanceHandler> handlers, Map<Type, Descriptor> services) {
+    public ServiceProvider(List<ISingleInstanceHandler> handlers, ITransactionProvider transactionProvider, Map<Type, Descriptor> services) {
         this.handlers = handlers;
+        this.transactionProvider = transactionProvider;
         this.services = services;
     }
 
     @Override
     public <T> T getService(Class<T> key) {
         var descriptor = services.get(key);
-        var shouldClear = !transactionBegin;
-        transactionBegin = true;
+        var transactionId = transactionProvider.tryBeginTransaction();
 
         var instance = key.cast(createObject(key, descriptor));
 
-        if (shouldClear) {
+        if (transactionProvider.tryFinalizeTransaction(transactionId)) {
             handlers.stream()
                     .filter(x -> x.canHandle(Lifetime.SCOPED))
                     .findFirst()
                     .ifPresent(ISingleInstanceHandler::clear);
-            transactionBegin = false;
         }
 
         return instance;

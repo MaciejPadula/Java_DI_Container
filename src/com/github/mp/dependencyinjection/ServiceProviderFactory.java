@@ -3,6 +3,7 @@ package com.github.mp.dependencyinjection;
 import com.github.mp.dependencyinjection.handlers.ScopedHandler;
 import com.github.mp.dependencyinjection.handlers.SingletonHandler;
 import com.github.mp.dependencyinjection.models.Descriptor;
+import com.github.mp.dependencyinjection.providers.TransactionProvider;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -13,6 +14,6 @@ public class ServiceProviderFactory {
         return new ServiceProvider(List.of(
                 new ScopedHandler(),
                 new SingletonHandler()
-        ), descriptors);
+        ), new TransactionProvider(), descriptors);
     }
 }
