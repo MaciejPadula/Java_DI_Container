@@ -12,6 +12,7 @@ import java.util.*;
 public class ServiceProvider implements IServiceProvider {
     private final List<ISingleInstanceHandler> handlers;
     private final Map<Type, Descriptor> services;
+    private boolean transactionBegin = false;
 
     public ServiceProvider(List<ISingleInstanceHandler> handlers, Map<Type, Descriptor> services) {
         this.handlers = handlers;
@@ -21,12 +22,18 @@ public class ServiceProvider implements IServiceProvider {
     @Override
     public <T> T getService(Class<T> key) {
         var descriptor = services.get(key);
+        var shouldClear = !transactionBegin;
+        transactionBegin = true;
+
         var instance = key.cast(createObject(key, descriptor));
 
-        handlers.stream()
-                .filter(x -> x.canHandle(Lifetime.SCOPED))
-                .findFirst()
-                .ifPresent(ISingleInstanceHandler::clear);
+        if (shouldClear) {
+            handlers.stream()
+                    .filter(x -> x.canHandle(Lifetime.SCOPED))
+                    .findFirst()
+                    .ifPresent(ISingleInstanceHandler::clear);
+            transactionBegin = false;
+        }
 
         return instance;
     }
